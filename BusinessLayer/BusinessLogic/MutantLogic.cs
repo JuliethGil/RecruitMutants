@@ -1,7 +1,7 @@
 ﻿using BusinessLayer.Interfaces;
+using DataAccess.Models;
 using System;
 using System.Collections.Generic;
-using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Text.RegularExpressions;
 
@@ -9,138 +9,135 @@ namespace BusinessLayer.BusinessLogic
 {
     public class MutantLogic : IMutantLogic
     {
+
         public bool IsMutant(List<string> dna)
+        {
+            int lengthX = dna[0].Length;
+            int lengthY = dna.Count;
+
+            DnaContainsData(lengthY);
+            IsCorrectMatrixFormat(dna, lengthX);
+            Matriz(dna, lengthY);
+            ValidateLetters(dna);
+            ValidateDnaSequence(dna, lengthX, lengthY);
+
+            return true;
+        }
+
+        void DnaContainsData(int lengthY)
+        {
+            if (lengthY <= 0)
+                throw new Exception();
+        }
+
+        void IsCorrectMatrixFormat(List<string> dna, int lengthX)
+        {
+            List<string> wrongChains = dna.Where(x => x.Length != lengthX).ToList();
+            if (wrongChains.Count > 0)
+                throw new Exception();
+        }
+
+        void Matriz(List<string> dna, int lengthY)
+        {
+            List<string> ChainsThree = dna.Where(x => x.Length <= 3).ToList();
+            if (ChainsThree.Count > 0 && lengthY <= 3)
+                throw new Exception();
+        }
+
+        void ValidateLetters(List<string> dna)
         {
             string regexFormat = "^[ATCG]+$";
             Regex regex = new Regex(regexFormat);
 
             foreach (string chain in dna)
             {
-                MatchCollection matchDNA = regex.Matches(chain);
-                if (matchDNA.Count <= 0)
-                    return false;
+                MatchCollection matchDna = regex.Matches(chain);
+                if (matchDna.Count <= 0)
+                    throw new Exception();
             }
-
-
-            List<Node> nodesList = new List<Node>();
-            Node parent = new Node(dna[0][0].ToString(),0 ,0);
-            MappingNode(ref parent , dna, 0 ,0, ref nodesList);
-
-            int countChains = 0;
-            List<Node> nodesClean = nodesList.Distinct(new DistinctNodeComparer()).ToList();
-            foreach(Node node in nodesClean)
-            {
-                if(node.bottom != null && node.bottom.key == node.key)
-                {
-                    if (node.bottom.bottom != null &&  node.bottom.bottom.key == node.key)
-                    {
-                        if (node.bottom.bottom.bottom != null && node.bottom.bottom.bottom.key == node.key)
-                        {
-                            countChains++;
-                        }
-                    }
-                }
-
-                if (node.right != null && node.right.key == node.key)
-                {
-                    if (node.right.right != null && node.right.right.key == node.key)
-                    {
-                        if (node.right.right.right != null && node.right.right.right.key == node.key)
-                        {
-                            countChains++;
-                        }
-                    }
-                }
-
-                if (node.botRight != null && node.botRight.key == node.key)
-                {
-                    if (node.botRight.botRight != null && node.botRight.botRight.key == node.key)
-                    {
-                        if (node.botRight.botRight.botRight != null && node.botRight.botRight.botRight.key == node.key)
-                        {
-                            countChains++;
-                        }
-                    }
-                }
-
-                if (node.botLeft != null && node.botLeft.key == node.key)
-                {
-                    if (node.botLeft.botLeft != null && node.botLeft.botLeft.key == node.key)
-                    {
-                        if (node.botLeft.botLeft.botLeft != null && node.botLeft.botLeft.botLeft.key == node.key)
-                        {
-                            countChains++;
-                        }
-                    }
-                }
-            }
-            
-            return countChains > 1;
         }
 
-        void MappingNode(ref Node parent, List<string> dna,int line ,int pos, ref List<Node> nodesList)
+        void ValidateDnaSequence(List<string> dna, int lengthY, int lengthX)
         {
-            if (pos < dna[line].Length - 1)
+            List<Node> nodesList = new List<Node>();
+            Node parent = new Node(dna[0][0].ToString(), 0, 0);
+            MappingNode(ref parent, dna, 0, 0, ref nodesList);
+
+
+            int countChains = 0;
+            List<Node> nodesClean = nodesList.Distinct(parent.distinctNodeComparer).ToList();
+            foreach (Node node in nodesClean)
             {
-                parent.right = new Node(dna[line][pos + 1].ToString(), pos + 1 , line);
-                MappingNode(ref parent.right, dna, line ,pos + 1, ref nodesList);
+                if (lengthX > 3 && node.Bottom != null && node.Bottom.Key == node.Key)
+                {
+                    if (node.Bottom.Bottom != null && node.Bottom.Bottom.Key == node.Key)
+                    {
+                        if (node.Bottom.Bottom.Bottom != null && node.Bottom.Bottom.Bottom.Key == node.Key)
+                            countChains++;
+                    }
+                }
+
+                if (lengthY > 3 && node.Right != null && node.Right.Key == node.Key)
+                {
+                    if (node.Right.Right != null && node.Right.Right.Key == node.Key)
+                    {
+                        if (node.Right.Right.Right != null && node.Right.Right.Right.Key == node.Key)
+                            countChains++;
+                    }
+                }
+
+                if (countChains < 2 && lengthX > 3 && lengthY > 3 && node.BotRight != null && node.BotRight.Key == node.Key)
+                {
+                    if (node.BotRight.BotRight != null && node.BotRight.BotRight.Key == node.Key)
+                    {
+                        if (node.BotRight.BotRight.BotRight != null && node.BotRight.BotRight.BotRight.Key == node.Key)
+                            countChains++;
+                    }
+                }
+
+                if (countChains < 2 && lengthX > 3 && lengthY > 3 && node.BotLeft != null && node.BotLeft.Key == node.Key)
+                {
+                    if (node.BotLeft.BotLeft != null && node.BotLeft.BotLeft.Key == node.Key)
+                    {
+                        if (node.BotLeft.BotLeft.BotLeft != null && node.BotLeft.BotLeft.BotLeft.Key == node.Key)
+                            countChains++;
+                    }
+                }
             }
 
-                
-            if (line < dna.Count - 1)
+            if (countChains >= 2)
+                return;
+
+            throw new Exception();
+        }
+
+        void MappingNode(ref Node parent, List<string> dna, int positionY, int positionX, ref List<Node> nodesList)
+        {
+            if (positionX < dna[positionY].Length - 1)
             {
-                parent.bottom = new Node(dna[line + 1][pos].ToString(), pos, line + 1);
-                MappingNode(ref parent.bottom, dna,line + 1 ,pos, ref nodesList);
+                parent.Right = new Node(dna[positionY][positionX + 1].ToString(), positionX + 1, positionY);
+                MappingNode(ref parent.Right, dna, positionY, positionX + 1, ref nodesList);
             }
 
-            if (pos < dna[line].Length - 1 && line < dna.Count - 1)
+            if (positionY < dna.Count - 1)
             {
-                parent.botRight = new Node(dna[line + 1][pos + 1].ToString(), pos + 1, line + 1);
-                MappingNode(ref parent.botRight, dna, line + 1, pos + 1, ref nodesList);
+                parent.Bottom = new Node(dna[positionY + 1][positionX].ToString(), positionX, positionY + 1);
+                MappingNode(ref parent.Bottom, dna, positionY + 1, positionX, ref nodesList);
             }
 
-            if (pos > 0 && pos < dna[line].Length && line < dna.Count - 1)
+            if (positionX < dna[positionY].Length - 1 && positionY < dna.Count - 1)
             {
-                parent.botLeft = new Node(dna[line + 1][pos - 1].ToString(), pos - 1, line + 1);
-                MappingNode(ref parent.botLeft, dna, line + 1, pos - 1, ref nodesList);
+                parent.BotRight = new Node(dna[positionY + 1][positionX + 1].ToString(), positionX + 1, positionY + 1);
+                MappingNode(ref parent.BotRight, dna, positionY + 1, positionX + 1, ref nodesList);
+            }
+
+            if (positionX > 0 && positionX < dna[positionY].Length && positionY < dna.Count - 1)
+            {
+                parent.BotLeft = new Node(dna[positionY + 1][positionX - 1].ToString(), positionX - 1, positionY + 1);
+                MappingNode(ref parent.BotLeft, dna, positionY + 1, positionX - 1, ref nodesList);
             }
 
             nodesList.Add(parent);
-            
-        }
-    }
-
-   
-
-    class Node {
-        public string key;
-        public Node  right, bottom, botRight, botLeft;
-        public int posX, posY;
-
-        public Node(string item, int posX, int posY)
-        {
-            key = item;
-            right = bottom = botRight = botLeft = null;
-            this.posX = posX;
-            this.posY = posY;
-
-        }
-    }
-
-    class DistinctNodeComparer : IEqualityComparer<Node>
-    {
-
-        public bool Equals(Node x, Node y)
-        {
-            return x.posX == y.posX &&
-                    x.posY == y.posY;
-        }
-
-        public int GetHashCode(Node obj)
-        {
-            return obj.key.GetHashCode() ^
-                obj.posX.GetHashCode() ^
-                obj.posY.GetHashCode();
         }
     }
 }

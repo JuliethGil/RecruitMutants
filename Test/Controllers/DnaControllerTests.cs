@@ -1,4 +1,5 @@
 ﻿using BusinessLayer.BusinessLogic;
+using System;
 using System.Collections.Generic;
 using Xunit;
 
@@ -6,9 +7,88 @@ namespace Test.Controllers
 {
     public class DnaControllerTests
     {
+        [Fact]
+        public void ValidateListEmpy_InvalidOperationException()
+        {
+            List<string> dna = new List<string>();
+
+            MutantLogic mutantLogic = new MutantLogic();
+            Action action = () => mutantLogic.IsMutant(dna);
+
+            InvalidOperationException exception = Assert.Throws<InvalidOperationException>(action);
+            Assert.Equal($"{nameof(MutantLogic)}: No DNA.", exception.Message);
+        }
 
         [Fact]
-        public void ValidateArrayFormatTwoChain_True()
+        public void FormatWrong_InvalidOperationException()
+        {
+            List<string> dna = new List<string>()
+            {
+                "ATGGGG",
+                "ATAAA",
+            };
+
+            MutantLogic mutantLogic = new MutantLogic();
+            Action action = () => mutantLogic.IsMutant(dna);
+
+            InvalidOperationException exception = Assert.Throws<InvalidOperationException>(action);
+            Assert.Equal($"{nameof(MutantLogic)}: The DNA format is wrong.", exception.Message);
+        }
+
+        [Fact]
+        public void ValidateMinimumSequence_InvalidOperationException()
+        {
+            List<string> dna = new List<string>()
+            {
+                "ATG",
+                "ATA",
+            };
+
+            MutantLogic mutantLogic = new MutantLogic();
+            Action action = () => mutantLogic.IsMutant(dna);
+
+            InvalidOperationException exception = Assert.Throws<InvalidOperationException>(action);
+            Assert.Equal($"{nameof(MutantLogic)}: DNA does not meet the minimum sequence to be a mutant.", exception.Message);
+        }
+
+        [Fact]
+        public void ValidateNitrogenousBaseWithATCG_InvalidOperationException()
+        {
+            List<string> dna = new List<string>()
+            {
+                "ATGTHC",
+                "ATAAAA",
+            };
+
+            MutantLogic mutantLogic = new MutantLogic();
+            Action action = () => mutantLogic.IsMutant(dna);
+
+            InvalidOperationException exception = Assert.Throws<InvalidOperationException>(action);
+            Assert.Equal($"{nameof(MutantLogic)}: The nitrogenous base of DNA has invalid data.", exception.Message);
+        }
+
+        [Fact]
+        public void NonMutantDNA_InvalidOperationException()
+        {
+            List<string> dna = new List<string>
+            {
+                "ATGTGA",
+                "AAGCGC",
+                "TTATGA",
+                "AGATGC",
+                "CCGCTC",
+                "TCACTG"
+            };
+
+            MutantLogic mutantLogic = new MutantLogic();
+            Action action = () => mutantLogic.IsMutant(dna);
+
+            InvalidOperationException exception = Assert.Throws<InvalidOperationException>(action);
+            Assert.Equal($"{nameof(MutantLogic)}: DNA is not from a mutant.", exception.Message);
+        }
+
+        [Fact]
+        public void ValidateMutantHorizontally_True()
         {
             List<string> dna = new List<string>
             {
@@ -23,30 +103,14 @@ namespace Test.Controllers
         }
 
         [Fact]
-        public void ValidateArrayFormatTwoChain_False()
-        {
-            List<string> dna = new List<string>
-            {
-                "ATMCGA",
-                "ATMCGA",
-            };
-
-            MutantLogic mutantLogic = new MutantLogic();
-            bool isMutant = mutantLogic.IsMutant(dna);
-
-            Assert.False(isMutant);
-        }
-
-        [Fact]
-        public void ValidateArrayFormatMultiChain_True()
+        public void ValidateMutantDownVertical_True()
         {
             List<string> dna = new List<string>
             {
                 "ATGAGA",
-                "CAGTGC",
-                "TTATGT",
-                "AGAAGG",
-                "CCCCTA",
+                "CCGTGC",
+                "TCGTGT",
+                "ACACGG",
                 "TCACTG"
             };
 
@@ -57,123 +121,16 @@ namespace Test.Controllers
         }
 
         [Fact]
-        public void ValidateArrayFormatMultiChain_False()
+        public void ValidateMtantUpVertical_True()
         {
             List<string> dna = new List<string>
             {
-                "ATMCGA",
-                "TCACTG",
-                "TCACKG",
-            };
-
-            MutantLogic mutantLogic = new MutantLogic();
-            bool isMutant = mutantLogic.IsMutant(dna);
-
-            Assert.False(isMutant);
-        }
-
-        [Fact]
-        public void ValidateMutanChainVertical_True()
-        {
-            List<string> dna = new List<string>
-            {
-                "ATGTGA",
+                "ATGGGA",
                 "AAGTGC",
-                "ATATGC",
-                "AGATGC",
-                "CCACTC",
+                "GGTTCT",
+                "GCACGC",
+                "ACCCTC",
                 "TCACTG"
-            };
-
-            MutantLogic mutantLogic = new MutantLogic();
-            bool isMutant = mutantLogic.IsMutant(dna);
-
-            Assert.True(isMutant);
-        }
-
-        [Fact]
-        public void ValidateMutanChainVertical_False()
-        {
-            List<string> dna = new List<string>
-            {
-                "ATGTGA",
-                "AAGTGC",
-                "TTAAGA",
-                "AGCTTC",
-                "CCACTC",
-                "TCACTG"
-            };
-
-            MutantLogic mutantLogic = new MutantLogic();
-            bool isMutant = mutantLogic.IsMutant(dna);
-
-            Assert.False(isMutant);
-        }
-
-        [Fact]
-        public void ValidateMutanChainHorizontal_True()
-        {
-            List<string> dna = new List<string>
-            {
-                "ATGTGA",
-                "AAGCGC",
-                "TTATGA",
-                "AGATGC",
-                "CCCCTC",
-                "TCACTG"
-            };
-
-            MutantLogic mutantLogic = new MutantLogic();
-            bool isMutant = mutantLogic.IsMutant(dna);
-
-            Assert.True(isMutant);
-        }
-
-        [Fact]
-        public void ValidateMutanChainHorizontal_False()
-        {
-            List<string> dna = new List<string>
-            {
-                "ATGTGA",
-                "AAGCGC",
-                "TTATGA",
-                "AGATGC",
-                "CCGCTC",
-                "TCACTG"
-            };
-
-            MutantLogic mutantLogic = new MutantLogic();
-            bool isMutant = mutantLogic.IsMutant(dna);
-
-            Assert.False(isMutant);
-        }
-
-        [Fact]
-        public void ValidateMutanChainBottomRight_True()
-        {
-            List<string> dna = new List<string>
-            {
-                "ATGTGT",
-                "AATCTC",
-                "TTATTA",
-                "AGAATC",
-            };
-
-            MutantLogic mutantLogic = new MutantLogic();
-            bool isMutant = mutantLogic.IsMutant(dna);
-
-            Assert.True(isMutant);
-        }
-
-        [Fact]
-        public void ValidateMutanChainBottomLeft_True()
-        {
-            List<string> dna = new List<string>
-            {
-                "ATGTGT",
-                "AACGTC",
-                "TTGTTA",
-                "AGTATC",
             };
 
             MutantLogic mutantLogic = new MutantLogic();

@@ -5,14 +5,14 @@ namespace DataAccess.Models
     public class Node
     {
         public string Key;
-        public Node Right, Bottom, BotRight, BotLeft;
+        public Node Right, Bottom, BottomRight, BottomLeft;
         public int PositionX, PositionY;
         public DistinctNodeComparer distinctNodeComparer;
 
         public Node(string item, int positionX, int positionY)
         {
             Key = item;
-            Right = Bottom = BotRight = BotLeft = null;
+            Right = Bottom = BottomRight = BottomLeft = null;
             PositionX = positionX;
             PositionY = positionY;
             distinctNodeComparer = new DistinctNodeComparer();

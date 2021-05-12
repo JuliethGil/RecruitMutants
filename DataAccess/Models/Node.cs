@@ -1,4 +1,15 @@
-﻿using System.Collections.Generic;
+﻿// ***********************************************************************
+// Assembly         : Xm.Sicep.Audit.Common
+// Author           : Julieth Gil
+// Created          : 09-05-2020
+//
+// ***********************************************************************
+// <copyright file="Node.cs" company="">
+//     Copyright (c) Julieth Gil. All rights reserved.
+// </copyright>
+// <summary></summary>
+
+using System.Collections.Generic;
 
 namespace DataAccess.Models
 {

@@ -1,4 +1,5 @@
 ﻿using BusinessLayer.Constants;
+using BusinessLayer.Dtos;
 using BusinessLayer.Interfaces;
 using DataAccess.Models;
 using System;
@@ -10,15 +11,15 @@ namespace BusinessLayer.BusinessLogic
 {
     public class MutantLogic : IMutantLogic
     {
-        public bool IsMutant(List<string> dna)
+        public bool IsMutant(MutantDto mutantDto)
         {
-            int lengthY = dna.Count;
+            int lengthY = mutantDto.Dna.Count;
             DnaContainsData(lengthY);
-            int lengthX = dna[0].Length;
-            IsCorrectFormatDna(dna, lengthX);
-            HasSequenceMinimum(dna, lengthY);
-            ValidateNitrogenousBase(dna);
-            ValidateDnaSequence(dna, lengthX, lengthY);
+            int lengthX = mutantDto.Dna[0].Length;
+            IsCorrectFormatDna(mutantDto.Dna, lengthX);
+            HasSequenceMinimum(mutantDto.Dna, lengthY);
+            ValidateNitrogenousBase(mutantDto.Dna);
+            ValidateDnaSequence(mutantDto.Dna, lengthX, lengthY);
 
             return true;
         }

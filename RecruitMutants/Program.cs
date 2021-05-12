@@ -1,18 +1,21 @@
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Hosting;
-using Microsoft.Extensions.Logging;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+using System.Diagnostics.CodeAnalysis;
 
 namespace RecruitMutants
 {
+    [ExcludeFromCodeCoverage]
     public class Program
     {
         public static void Main(string[] args)
         {
+            // AutoMapper
+            AutoMapper.Mapper.Initialize(cfg =>
+            {
+                cfg.CreateMissingTypeMaps = true;
+                cfg.ValidateInlineMaps = false;
+            });
+
             CreateHostBuilder(args).Build().Run();
         }
 

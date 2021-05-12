@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using BusinessLayer.Dtos;
+using System.Collections.Generic;
 
 namespace BusinessLayer.Interfaces
 {
@@ -9,6 +10,6 @@ namespace BusinessLayer.Interfaces
         /// </summary>
         /// <param name="dna">dna list</param>
         /// <returns>Is a mutant</returns>
-        bool IsMutant(List<string> dna);
+        bool IsMutant(MutantDto dna);
     }
 }

@@ -22,6 +22,7 @@ namespace BusinessLayer.BusinessLogic
             ValidateDnaSequence(mutantDto.Dna, lengthX, lengthY);
 
             return true;
+
         }
 
         private void DnaContainsData(int lengthY)

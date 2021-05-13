@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using BusinessLayer.BusinessLogic;
 using BusinessLayer.Dtos;
 using BusinessLayer.Interfaces;
 using Microsoft.AspNetCore.Mvc;
@@ -36,13 +37,20 @@ namespace RecruitMutants.Controllers
         [Produces(MediaTypeNames.Application.Json, Type = typeof(MutantModel))]
         public IActionResult Post([FromBody] MutantModel request)
         {
-            var objRequest = Mapper.Map<MutantDto>(request);
+            try
+            {
+                var objRequest = Mapper.Map<MutantDto>(request);
+                bool isMutant = _service.IsMutant(objRequest);
 
-            bool isMutant = _service.IsMutant(objRequest);
-            
-            if (isMutant)
-                return Ok();
-            return BadRequest();
+                if (isMutant)
+                    return Ok();
+            }
+            catch (Exception)
+            {
+                return StatusCode((int)HttpStatusCode.Forbidden, null);
+            }
+
+            return StatusCode((int)HttpStatusCode.Forbidden, null);
         }
     }
 }

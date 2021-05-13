@@ -1,3 +1,5 @@
+using BusinessLayer.BusinessLogic;
+using BusinessLayer.Interfaces;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
@@ -18,6 +20,7 @@ namespace RecruitMutants
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            services.AddScoped<IMutantLogic, MutantLogic>();
             services.AddControllers();
         }
 
@@ -40,5 +43,6 @@ namespace RecruitMutants
                 endpoints.MapControllers();
             });
         }
+
     }
 }

@@ -1,7 +1,7 @@
 ﻿// ***********************************************************************
 // Assembly         : Xm.Sicep.Audit.Common
 // Author           : Julieth Gil
-// Created          : 09-05-2020
+// Created          : 09-05-2021
 //
 // ***********************************************************************
 // <copyright file="Node.cs" company="">
@@ -11,16 +11,16 @@
 
 using System.Collections.Generic;
 
-namespace DataAccess.Models
+namespace BusinessLayer.Dtos
 {
-    public class Node
+    public class NodeDto
     {
         public string Key;
-        public Node Right, Bottom, BottomRight, BottomLeft;
+        public NodeDto Right, Bottom, BottomRight, BottomLeft;
         public int PositionX, PositionY;
         public DistinctNodeComparer distinctNodeComparer;
 
-        public Node(string item, int positionX, int positionY)
+        public NodeDto(string item, int positionX, int positionY)
         {
             Key = item;
             Right = Bottom = BottomRight = BottomLeft = null;
@@ -29,15 +29,15 @@ namespace DataAccess.Models
             distinctNodeComparer = new DistinctNodeComparer();
         }
 
-        public class DistinctNodeComparer : IEqualityComparer<Node>
+        public class DistinctNodeComparer : IEqualityComparer<NodeDto>
         {
-            public bool Equals(Node x, Node y)
+            public bool Equals(NodeDto x, NodeDto y)
             {
                 return x.PositionX == y.PositionX &&
                         x.PositionY == y.PositionY;
             }
 
-            public int GetHashCode(Node obj)
+            public int GetHashCode(NodeDto obj)
             {
                 return obj.Key.GetHashCode() ^
                     obj.PositionX.GetHashCode() ^

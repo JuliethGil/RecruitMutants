@@ -1,8 +1,7 @@
-﻿
-// ***********************************************************************
+﻿// ***********************************************************************
 // Assembly         : Xm.Sicep.Audit.Common
 // Author           : Julieth Gil
-// Created          : 09-05-2021
+// Created          : 12-05-2021
 //
 // ***********************************************************************
 // <copyright file="Node.cs" company="">
@@ -10,12 +9,12 @@
 // </copyright>
 // <summary></summary>
 
-using System.Collections.Generic;
-
-namespace BusinessLayer.Dtos
+namespace DataAccess.Entities
 {
-    public class MutantDto
+    public partial class DnaSequence
     {
-        public List<string> Dna { get; set; }
+        public int Id { get; set; }
+        public string PersonDna { get; set; }
+        public bool IsMutant { get; set; }
     }
 }

@@ -1,8 +1,8 @@
 ﻿
 // ***********************************************************************
-// Assembly         : BusinessLayer
+// Assembly         : DataAccess
 // Author           : Julieth Gil
-// Created          : 08-05-2021
+// Created          : 15-05-2021
 //
 // ***********************************************************************
 // <copyright file="Node.cs" company="">
@@ -10,18 +10,18 @@
 // </copyright>
 // <summary></summary>
 
-using BusinessLayer.Dtos;
+using DataAccess.Dtos;
 using System.Threading.Tasks;
 
-namespace BusinessLayer.Interfaces
+namespace DataAccess.Interfaces
 {
-    public interface IMutantLogic
+    public interface IDnaSequenceQuery
     {
         /// <summary> 
-        /// Validate if is a mutant's chain 
+        /// Insert the data to the DB
         /// </summary>
-        /// <param name="dna">dna list</param>
-        /// <returns>Is a mutant</returns>
-        Task<bool> IsMutant(MutantDto dna);
+        /// <param name="dnaSequenceDto">DnaSequenceDto data to enter </param>
+        /// <returns>ID DnaSequenceDto</returns>
+        Task<int> InsertDnaSequence(DnaSequenceDto dnaSequenceDto);
     }
 }

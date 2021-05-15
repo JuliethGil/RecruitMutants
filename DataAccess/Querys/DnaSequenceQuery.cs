@@ -1,9 +1,24 @@
-﻿using DataAccess.Entities;
+﻿
+// ***********************************************************************
+// Assembly         : DataAccess
+// Author           : Julieth Gil
+// Created          : 13-05-2021
+//
+// ***********************************************************************
+// <copyright file="Node.cs" company="">
+//     Copyright (c) Julieth Gil. All rights reserved.
+// </copyright>
+// <summary></summary>
+
+using AutoMapper;
+using DataAccess.Dtos;
+using DataAccess.Entities;
+using DataAccess.Interfaces;
 using System.Threading.Tasks;
 
 namespace DataAccess.Services
 {
-    public class DnaSequenceQuery
+    public class DnaSequenceQuery: IDnaSequenceQuery
     {
         private readonly CoreContext CoreContext;
 
@@ -12,16 +27,10 @@ namespace DataAccess.Services
             CoreContext = coreContext;
         }
 
-        public async Task InsertDnaSequence()
+        public async Task<int> InsertDnaSequence(DnaSequenceDto dnaSequenceDto)
         {
-            var entity = new DnaSequence()
-            {
-                PersonDna = "",
-                IsMutant = false
-            };
-
-            CoreContext.DnaSequences.Add(entity);
-            await CoreContext.SaveChangesAsync();
+            CoreContext.DnaSequences.Add(Mapper.Map<DnaSequence>(dnaSequenceDto));
+            return await CoreContext.SaveChangesAsync();
         }
     }
 }

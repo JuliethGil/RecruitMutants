@@ -1,5 +1,5 @@
 ﻿// ***********************************************************************
-// Assembly         : Xm.Sicep.Audit.Common
+// Assembly         : BusinessLayer
 // Author           : Julieth Gil
 // Created          : 09-05-2021
 //
@@ -13,14 +13,14 @@ using System.Collections.Generic;
 
 namespace BusinessLayer.Dtos
 {
-    public class NodeDto
+    public class NodeModel
     {
         public string Key;
-        public NodeDto Right, Bottom, BottomRight, BottomLeft;
+        public NodeModel Right, Bottom, BottomRight, BottomLeft;
         public int PositionX, PositionY;
         public DistinctNodeComparer distinctNodeComparer;
 
-        public NodeDto(string item, int positionX, int positionY)
+        public NodeModel(string item, int positionX, int positionY)
         {
             Key = item;
             Right = Bottom = BottomRight = BottomLeft = null;
@@ -29,15 +29,15 @@ namespace BusinessLayer.Dtos
             distinctNodeComparer = new DistinctNodeComparer();
         }
 
-        public class DistinctNodeComparer : IEqualityComparer<NodeDto>
+        public class DistinctNodeComparer : IEqualityComparer<NodeModel>
         {
-            public bool Equals(NodeDto x, NodeDto y)
+            public bool Equals(NodeModel x, NodeModel y)
             {
                 return x.PositionX == y.PositionX &&
                         x.PositionY == y.PositionY;
             }
 
-            public int GetHashCode(NodeDto obj)
+            public int GetHashCode(NodeModel obj)
             {
                 return obj.Key.GetHashCode() ^
                     obj.PositionX.GetHashCode() ^

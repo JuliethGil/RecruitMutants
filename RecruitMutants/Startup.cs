@@ -1,6 +1,8 @@
 using BusinessLayer.BusinessLogic;
 using BusinessLayer.Interfaces;
 using DataAccess;
+using DataAccess.Interfaces;
+using DataAccess.Services;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.EntityFrameworkCore;
@@ -28,12 +30,16 @@ namespace RecruitMutants
                 .AddDbContext<CoreContext>(options =>
                 {
                     options.UseNpgsql(Configuration.GetConnectionString("DefaultConnection"));
-                });
-            
+                    
+                }).AddSingleton(Configuration.GetConnectionString("DefaultConnection"));
+            //services.AddSingleton<IDnaSequenceQuery,DnaSequenceQuery>();
+            services.AddScoped<IDnaSequenceQuery, DnaSequenceQuery>();
+
+
             #endregion Context SQL Postgres
 
             #region Register (dependency injection)
-            
+
             services.AddScoped<IMutantLogic, MutantLogic>();
             services.AddControllers();
             

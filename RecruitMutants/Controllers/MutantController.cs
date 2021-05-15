@@ -1,5 +1,16 @@
-﻿using AutoMapper;
-using BusinessLayer.BusinessLogic;
+﻿
+// ***********************************************************************
+// Assembly         : RecruitMutants
+// Author           : Julieth Gil
+// Created          : 10-05-2021
+//
+// ***********************************************************************
+// <copyright file="Node.cs" company="">
+//     Copyright (c) Julieth Gil. All rights reserved.
+// </copyright>
+// <summary></summary>
+
+using AutoMapper;
 using BusinessLayer.Dtos;
 using BusinessLayer.Interfaces;
 using Microsoft.AspNetCore.Mvc;
@@ -7,6 +18,7 @@ using RecruitMutants.Models;
 using System;
 using System.Net;
 using System.Net.Mime;
+using System.Threading.Tasks;
 
 namespace RecruitMutants.Controllers
 {
@@ -35,12 +47,12 @@ namespace RecruitMutants.Controllers
         [ProducesResponseType((int)HttpStatusCode.Created)]
         [ProducesResponseType((int)HttpStatusCode.Forbidden)]
         [Produces(MediaTypeNames.Application.Json, Type = typeof(MutantModel))]
-        public IActionResult Post([FromBody] MutantModel request)
+        public async Task<IActionResult> Post([FromBody] MutantModel request)
         {
             try
             {
                 var objRequest = Mapper.Map<MutantDto>(request);
-                bool isMutant = _service.IsMutant(objRequest);
+                bool isMutant = await _service.IsMutant(objRequest);
 
                 if (isMutant)
                     return Ok();

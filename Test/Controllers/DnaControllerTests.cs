@@ -1,13 +1,23 @@
 ﻿using BusinessLayer.BusinessLogic;
 using BusinessLayer.Dtos;
+using BusinessLayer.Interfaces;
+using DataAccess.Interfaces;
+using Moq;
+using RecruitMutants.Controllers;
 using System;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using Xunit;
 
 namespace Test.Controllers
 {
     public class DnaControllerTests
     {
+
+        private IDnaSequenceQuery _mockService;
+        private IMutantLogic _mutantLogit;
+
+
         [Fact]
         public void ValidateListEmpy_InvalidOperationException()
         {
@@ -16,7 +26,7 @@ namespace Test.Controllers
                 Dna = new List<string>()
             };
 
-            MutantLogic mutantLogic = new MutantLogic();
+            MutantLogic mutantLogic = new MutantLogic(_mockService);
             Action action = () => mutantLogic.IsMutant(mutantDto);
 
             InvalidOperationException exception = Assert.Throws<InvalidOperationException>(action);
@@ -35,7 +45,7 @@ namespace Test.Controllers
                 }
             };
 
-            MutantLogic mutantLogic = new MutantLogic();
+            MutantLogic mutantLogic = new MutantLogic(_mockService);
             Action action = () => mutantLogic.IsMutant(mutantDto);
 
             InvalidOperationException exception = Assert.Throws<InvalidOperationException>(action);
@@ -54,7 +64,7 @@ namespace Test.Controllers
                 }
             };
 
-            MutantLogic mutantLogic = new MutantLogic();
+            MutantLogic mutantLogic = new MutantLogic(_mockService);
             Action action = () => mutantLogic.IsMutant(mutantDto);
 
             InvalidOperationException exception = Assert.Throws<InvalidOperationException>(action);
@@ -73,7 +83,7 @@ namespace Test.Controllers
                 }
             };
 
-            MutantLogic mutantLogic = new MutantLogic();
+            MutantLogic mutantLogic = new MutantLogic(_mockService);
             Action action = () => mutantLogic.IsMutant(mutantDto);
 
             InvalidOperationException exception = Assert.Throws<InvalidOperationException>(action);
@@ -96,7 +106,7 @@ namespace Test.Controllers
                 }
             };
 
-            MutantLogic mutantLogic = new MutantLogic();
+            MutantLogic mutantLogic = new MutantLogic(_mockService);
             Action action = () => mutantLogic.IsMutant(mutantDto);
 
             InvalidOperationException exception = Assert.Throws<InvalidOperationException>(action);
@@ -115,10 +125,10 @@ namespace Test.Controllers
                 }
             };
 
-            MutantLogic mutantLogic = new MutantLogic();
-            bool isMutant = mutantLogic.IsMutant(mutantDto);
+            MutantLogic mutantLogic = new MutantLogic(_mockService);
+            Task<bool> isMutant = mutantLogic.IsMutant(mutantDto);
 
-            Assert.True(isMutant);
+            Assert.True(isMutant.Result);
         }
 
         [Fact]
@@ -136,10 +146,10 @@ namespace Test.Controllers
                 }
             };
 
-            MutantLogic mutantLogic = new MutantLogic();
-            bool isMutant = mutantLogic.IsMutant(mutantDto);
+            MutantLogic mutantLogic = new MutantLogic(_mockService);
+            Task<bool> isMutant = mutantLogic.IsMutant(mutantDto);
 
-            Assert.True(isMutant);
+            Assert.True(isMutant.Result);
         }
 
         [Fact]
@@ -158,10 +168,10 @@ namespace Test.Controllers
                 }
             };
 
-            MutantLogic mutantLogic = new MutantLogic();
-            bool isMutant = mutantLogic.IsMutant(mutantDto);
+            MutantLogic mutantLogic = new MutantLogic(_mockService);
+            Task<bool> isMutant = mutantLogic.IsMutant(mutantDto);
 
-            Assert.True(isMutant);
+            Assert.True(isMutant.Result);
         }
     }
 }

@@ -11,17 +11,26 @@
 // <summary></summary>
 
 using BusinessLayer.Dtos;
+using DataAccess.Dtos;
 using System.Threading.Tasks;
 
 namespace BusinessLayer.Interfaces
 {
-    public interface IMutantLogic
+    public interface IDnaSequenceLogic
     {
         /// <summary> 
         /// Validate if is a mutant's chain 
         /// </summary>
         /// <param name="dna">dna list</param>
         /// <returns>Is a mutant</returns>
-        Task<bool> IsMutant(MutantDto dna);
+        Task<bool> IsMutant(DnaDto dna);
+
+
+        /// <summary> 
+        /// Get information from people and mutants
+        /// </summary>
+        /// <param name="dna">dna list</param>
+        /// <returns>Stats of people and mutants</returns>
+        Task<StatsDto> Stats();
     }
 }

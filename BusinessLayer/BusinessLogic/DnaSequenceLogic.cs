@@ -23,13 +23,13 @@ using System.Threading.Tasks;
 
 namespace BusinessLayer.BusinessLogic
 {
-    public class MutantLogic : IMutantLogic
+    public class DnaSequenceLogic : IDnaSequenceLogic
     {
         private readonly IDnaSequenceQuery _dnaSequenceQuery;
 
-        public MutantLogic(IDnaSequenceQuery dnaSequenceQuery) => _dnaSequenceQuery = dnaSequenceQuery;
+        public DnaSequenceLogic(IDnaSequenceQuery dnaSequenceQuery) => _dnaSequenceQuery = dnaSequenceQuery;
 
-        public async Task<bool> IsMutant(MutantDto mutantDto)
+        public async Task<bool> IsMutant(DnaDto mutantDto)
         {
             int lengthY = mutantDto.Dna.Count;
             DnaContainsData(lengthY);
@@ -52,14 +52,14 @@ namespace BusinessLayer.BusinessLogic
         private void DnaContainsData(int lengthY)
         {
             if (lengthY <= 0)
-                throw new InvalidOperationException($"{nameof(MutantLogic)}: No DNA.");
+                throw new InvalidOperationException($"{nameof(DnaSequenceLogic)}: No DNA.");
         }
 
         private void IsCorrectFormatDna(List<string> dna, int lengthX)
         {
             List<string> wrongChains = dna.Where(x => x.Length != lengthX).ToList();
             if (wrongChains.Count > 0)
-                throw new InvalidOperationException($"{nameof(MutantLogic)}: The DNA format is wrong.");
+                throw new InvalidOperationException($"{nameof(DnaSequenceLogic)}: The DNA format is wrong.");
         }
 
         private bool HasSequenceMinimum(List<string> dna, int lengthY)
@@ -78,10 +78,10 @@ namespace BusinessLayer.BusinessLogic
 
             foreach (string chain in dna)
             {
-                MatchCollection matchDna = regex.Matches(chain);
+                MatchCollection matchDna = regex.Matches(chain.ToUpper());
                 if (matchDna.Count <= 0)
                     //TODO: Insert db. false
-                    throw new InvalidOperationException($"{nameof(MutantLogic)}: The nitrogenous base of DNA has invalid data.");
+                    throw new InvalidOperationException($"{nameof(DnaSequenceLogic)}: The nitrogenous base of DNA has invalid data.");
             }
         }
 
@@ -192,6 +192,21 @@ namespace BusinessLayer.BusinessLogic
             };
 
             return await _dnaSequenceQuery.InsertDnaSequence(dnaSequenceDto);
+        }
+
+        public async Task<StatsDto> Stats()
+        {
+            List<DnaSequenceDto> dnaSequences = await _dnaSequenceQuery.PutDnaSequence();
+            
+            StatsDto stats = new StatsDto()
+            {
+                Count_mutant_dna = dnaSequences.Count(d => d.IsMutant),
+                Count_human_dna = dnaSequences.Count(d => !d.IsMutant),
+            };
+
+            stats.Ratio = Math.Round((decimal)stats.Count_mutant_dna / (decimal)stats.Count_human_dna, 1);
+
+            return stats;
         }
     }
 }

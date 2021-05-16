@@ -1,8 +1,8 @@
 ﻿
 // ***********************************************************************
-// Assembly         : Xm.Sicep.Audit.Common
+// Assembly         : DataAccess
 // Author           : Julieth Gil
-// Created          : 09-05-2021
+// Created          : 15-05-2021
 //
 // ***********************************************************************
 // <copyright file="Node.cs" company="">
@@ -10,12 +10,12 @@
 // </copyright>
 // <summary></summary>
 
-using System.Collections.Generic;
-
-namespace BusinessLayer.Dtos
+namespace DataAccess.Dtos
 {
-    public class MutantDto
+    public class StatsDto
     {
-        public List<string> Dna { get; set; }
+        public int Count_mutant_dna { get; set; }
+        public int Count_human_dna { get; set; }
+        public decimal Ratio { get; set; }
     }
 }

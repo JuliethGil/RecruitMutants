@@ -14,6 +14,9 @@ using AutoMapper;
 using DataAccess.Dtos;
 using DataAccess.Entities;
 using DataAccess.Interfaces;
+using Microsoft.EntityFrameworkCore;
+using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace DataAccess.Services
@@ -31,6 +34,19 @@ namespace DataAccess.Services
         {
             CoreContext.DnaSequences.Add(Mapper.Map<DnaSequence>(dnaSequenceDto));
             return await CoreContext.SaveChangesAsync();
+        }
+
+        public async Task<List<DnaSequenceDto>> PutDnaSequence()
+        {
+            var result =   await CoreContext.DnaSequences.Select(
+                s => new DnaSequence
+                {
+                    Id = s.Id,
+                    IsMutant = s.IsMutant,
+                    PersonDna = s.PersonDna
+                }).ToListAsync();
+
+            return Mapper.Map<List<DnaSequenceDto>>(result);
         }
     }
 }

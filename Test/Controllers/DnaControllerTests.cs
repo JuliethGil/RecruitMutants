@@ -1,6 +1,7 @@
 ﻿using BusinessLayer.BusinessLogic;
 using BusinessLayer.Dtos;
 using BusinessLayer.Interfaces;
+using DataAccess.Dtos;
 using DataAccess.Interfaces;
 using Moq;
 using RecruitMutants.Controllers;
@@ -15,28 +16,28 @@ namespace Test.Controllers
     {
 
         private IDnaSequenceQuery _mockService;
-        private IMutantLogic _mutantLogit;
+        private IDnaSequenceLogic _mutantLogit;
 
 
         [Fact]
         public void ValidateListEmpy_InvalidOperationException()
         {
-            MutantDto mutantDto = new MutantDto()
+            DnaDto dnaDto = new DnaDto()
             {
                 Dna = new List<string>()
             };
 
-            MutantLogic mutantLogic = new MutantLogic(_mockService);
-            Action action = () => mutantLogic.IsMutant(mutantDto);
+            DnaSequenceLogic mutantLogic = new DnaSequenceLogic(_mockService);
+            Action action = () => mutantLogic.IsMutant(dnaDto);
 
             InvalidOperationException exception = Assert.Throws<InvalidOperationException>(action);
-            Assert.Equal($"{nameof(MutantLogic)}: No DNA.", exception.Message);
+            Assert.Equal($"{nameof(DnaSequenceLogic)}: No DNA.", exception.Message);
         }
 
         [Fact]
         public void FormatWrong_InvalidOperationException()
         {
-            MutantDto mutantDto = new MutantDto()
+            DnaDto dnaDto = new DnaDto()
             {
                 Dna = new List<string>()
                 {
@@ -45,17 +46,17 @@ namespace Test.Controllers
                 }
             };
 
-            MutantLogic mutantLogic = new MutantLogic(_mockService);
-            Action action = () => mutantLogic.IsMutant(mutantDto);
+            DnaSequenceLogic mutantLogic = new DnaSequenceLogic(_mockService);
+            Action action = () => mutantLogic.IsMutant(dnaDto);
 
             InvalidOperationException exception = Assert.Throws<InvalidOperationException>(action);
-            Assert.Equal($"{nameof(MutantLogic)}: The DNA format is wrong.", exception.Message);
+            Assert.Equal($"{nameof(DnaSequenceLogic)}: The DNA format is wrong.", exception.Message);
         }
 
         [Fact]
         public void ValidateMinimumSequence_InvalidOperationException()
         {
-            MutantDto mutantDto = new MutantDto()
+            DnaDto dnaDto = new DnaDto()
             {
                 Dna = new List<string>()
                 {
@@ -64,17 +65,17 @@ namespace Test.Controllers
                 }
             };
 
-            MutantLogic mutantLogic = new MutantLogic(_mockService);
-            Action action = () => mutantLogic.IsMutant(mutantDto);
+            DnaSequenceLogic mutantLogic = new DnaSequenceLogic(_mockService);
+            Action action = () => mutantLogic.IsMutant(dnaDto);
 
             InvalidOperationException exception = Assert.Throws<InvalidOperationException>(action);
-            Assert.Equal($"{nameof(MutantLogic)}: DNA does not meet the minimum sequence to be a mutant.", exception.Message);
+            Assert.Equal($"{nameof(DnaSequenceLogic)}: DNA does not meet the minimum sequence to be a mutant.", exception.Message);
         }
 
         [Fact]
         public void ValidateNitrogenousBaseWithATCG_InvalidOperationException()
         {
-            MutantDto mutantDto = new MutantDto()
+            DnaDto dnaDto = new DnaDto()
             {
                 Dna = new List<string>()
                 {
@@ -83,17 +84,17 @@ namespace Test.Controllers
                 }
             };
 
-            MutantLogic mutantLogic = new MutantLogic(_mockService);
-            Action action = () => mutantLogic.IsMutant(mutantDto);
+            DnaSequenceLogic mutantLogic = new DnaSequenceLogic(_mockService);
+            Action action = () => mutantLogic.IsMutant(dnaDto);
 
             InvalidOperationException exception = Assert.Throws<InvalidOperationException>(action);
-            Assert.Equal($"{nameof(MutantLogic)}: The nitrogenous base of DNA has invalid data.", exception.Message);
+            Assert.Equal($"{nameof(DnaSequenceLogic)}: The nitrogenous base of DNA has invalid data.", exception.Message);
         }
 
         [Fact]
         public void NonMutantDNA_InvalidOperationException()
         {
-            MutantDto mutantDto = new MutantDto()
+            DnaDto dnaDto = new DnaDto()
             {
                 Dna = new List<string>()
                 {
@@ -106,17 +107,17 @@ namespace Test.Controllers
                 }
             };
 
-            MutantLogic mutantLogic = new MutantLogic(_mockService);
-            Action action = () => mutantLogic.IsMutant(mutantDto);
+            DnaSequenceLogic mutantLogic = new DnaSequenceLogic(_mockService);
+            Action action = () => mutantLogic.IsMutant(dnaDto);
 
             InvalidOperationException exception = Assert.Throws<InvalidOperationException>(action);
-            Assert.Equal($"{nameof(MutantLogic)}: DNA is not from a mutant.", exception.Message);
+            Assert.Equal($"{nameof(DnaSequenceLogic)}: DNA is not from a mutant.", exception.Message);
         }
 
         [Fact]
         public void ValidateMutantHorizontally_True()
         {
-            MutantDto mutantDto = new MutantDto()
+            DnaDto dnaDto = new DnaDto()
             {
                 Dna = new List<string>()
                 {
@@ -125,8 +126,8 @@ namespace Test.Controllers
                 }
             };
 
-            MutantLogic mutantLogic = new MutantLogic(_mockService);
-            Task<bool> isMutant = mutantLogic.IsMutant(mutantDto);
+            DnaSequenceLogic mutantLogic = new DnaSequenceLogic(_mockService);
+            Task<bool> isMutant = mutantLogic.IsMutant(dnaDto);
 
             Assert.True(isMutant.Result);
         }
@@ -134,7 +135,7 @@ namespace Test.Controllers
         [Fact]
         public void ValidateMutantDownVertical_True()
         {
-            MutantDto mutantDto = new MutantDto()
+            DnaDto dnaDto = new DnaDto()
             {
                 Dna = new List<string>()
                 {
@@ -146,8 +147,8 @@ namespace Test.Controllers
                 }
             };
 
-            MutantLogic mutantLogic = new MutantLogic(_mockService);
-            Task<bool> isMutant = mutantLogic.IsMutant(mutantDto);
+            DnaSequenceLogic mutantLogic = new DnaSequenceLogic(_mockService);
+            Task<bool> isMutant = mutantLogic.IsMutant(dnaDto);
 
             Assert.True(isMutant.Result);
         }
@@ -155,7 +156,7 @@ namespace Test.Controllers
         [Fact]
         public void ValidateMutantUpVertical_True()
         {
-            MutantDto mutantDto = new MutantDto()
+            DnaDto dnaDto = new DnaDto()
             {
                 Dna = new List<string>()
                 {
@@ -168,8 +169,8 @@ namespace Test.Controllers
                 }
             };
 
-            MutantLogic mutantLogic = new MutantLogic(_mockService);
-            Task<bool> isMutant = mutantLogic.IsMutant(mutantDto);
+            DnaSequenceLogic mutantLogic = new DnaSequenceLogic(_mockService);
+            Task<bool> isMutant = mutantLogic.IsMutant(dnaDto);
 
             Assert.True(isMutant.Result);
         }

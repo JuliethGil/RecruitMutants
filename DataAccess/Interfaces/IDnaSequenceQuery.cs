@@ -11,6 +11,8 @@
 // <summary></summary>
 
 using DataAccess.Dtos;
+using DataAccess.Entities;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 
 namespace DataAccess.Interfaces
@@ -23,5 +25,12 @@ namespace DataAccess.Interfaces
         /// <param name="dnaSequenceDto">DnaSequenceDto data to enter </param>
         /// <returns>ID DnaSequenceDto</returns>
         Task<int> InsertDnaSequence(DnaSequenceDto dnaSequenceDto);
+
+
+        /// <summary> 
+        /// Get the data to DnaSequenceDto
+        /// </summary>
+        /// <returns>ID List DnaSequenceDto</returns>
+        Task<List<DnaSequenceDto>> PutDnaSequence();
     }
 }

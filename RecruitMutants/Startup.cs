@@ -40,7 +40,7 @@ namespace RecruitMutants
 
             #region Register (dependency injection)
 
-            services.AddScoped<IMutantLogic, MutantLogic>();
+            services.AddScoped<IDnaSequenceLogic, DnaSequenceLogic>();
             services.AddControllers();
             
             #endregion Register (dependency injection)

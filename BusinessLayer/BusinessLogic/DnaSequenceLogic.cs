@@ -33,6 +33,7 @@ namespace BusinessLayer.BusinessLogic
             int lengthY = dnaDto.Dna.Count;
             DnaContainsData(lengthY);
             int lengthX = dnaDto.Dna[0].Length;
+            dnaDto.Dna = dnaDto.Dna.ConvertAll(d => d.ToUpper());
             IsCorrectFormatDna(dnaDto.Dna, lengthX);
             ValidateNitrogenousBase(dnaDto.Dna);
 
@@ -43,7 +44,6 @@ namespace BusinessLayer.BusinessLogic
             }
 
             await InsertDnaSequence(dnaDto.Dna, isMutant);
-
 
             return isMutant;
         }
@@ -77,7 +77,7 @@ namespace BusinessLayer.BusinessLogic
 
             foreach (string chain in dna)
             {
-                MatchCollection matchDna = regex.Matches(chain.ToUpper());
+                MatchCollection matchDna = regex.Matches(chain);
                 if (matchDna.Count <= 0)
                     throw new InvalidOperationException($"{nameof(DnaSequenceLogic)}: The nitrogenous base of DNA has invalid data.");
             }

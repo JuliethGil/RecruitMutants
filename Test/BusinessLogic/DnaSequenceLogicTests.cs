@@ -20,7 +20,7 @@ using System.Threading.Tasks;
 using Test.Stubs;
 using Xunit;
 
-namespace Test.Controllers
+namespace Test.BusinessLogic
 {
     public class DnaSequenceLogicTests
     {

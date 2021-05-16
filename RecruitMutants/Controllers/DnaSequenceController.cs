@@ -24,6 +24,7 @@ using System.Threading.Tasks;
 namespace RecruitMutants.Controllers
 {
     [ApiController]
+    [Route("api/")]
     public class MutantController : ControllerBase
     {
         /// <summary>
@@ -58,7 +59,7 @@ namespace RecruitMutants.Controllers
                 if (isMutant)
                     return Ok();
             }
-            catch (Exception)
+            catch (Exception ex)
             {
                 return StatusCode((int)HttpStatusCode.Forbidden, null);
             }

@@ -20,6 +20,8 @@ namespace DataAccess.Dtos
 
         public StatsDto()
         {
+            Count_mutant_dna = 0;
+            Count_human_dna = 0;
             Ratio = 0;
         }
     }

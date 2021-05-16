@@ -11,7 +11,7 @@
 
 using System.Collections.Generic;
 
-namespace BusinessLayer.Dtos
+namespace DataAccess.Dtos
 {
     public class NodeModel
     {

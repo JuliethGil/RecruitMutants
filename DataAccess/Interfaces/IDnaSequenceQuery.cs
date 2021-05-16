@@ -11,7 +11,6 @@
 // <summary></summary>
 
 using DataAccess.Dtos;
-using DataAccess.Entities;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 

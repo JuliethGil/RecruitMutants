@@ -11,7 +11,6 @@
 // <summary></summary>
 
 using BusinessLayer.Constants;
-using BusinessLayer.Dtos;
 using BusinessLayer.Interfaces;
 using DataAccess.Dtos;
 using DataAccess.Interfaces;
@@ -29,21 +28,21 @@ namespace BusinessLayer.BusinessLogic
 
         public DnaSequenceLogic(IDnaSequenceQuery dnaSequenceQuery) => _dnaSequenceQuery = dnaSequenceQuery;
 
-        public async Task<bool> IsMutant(DnaDto mutantDto)
+        public async Task<bool> IsMutant(DnaDto dnaDto)
         {
-            int lengthY = mutantDto.Dna.Count;
+            int lengthY = dnaDto.Dna.Count;
             DnaContainsData(lengthY);
-            int lengthX = mutantDto.Dna[0].Length;
-            IsCorrectFormatDna(mutantDto.Dna, lengthX);
-            ValidateNitrogenousBase(mutantDto.Dna);
+            int lengthX = dnaDto.Dna[0].Length;
+            IsCorrectFormatDna(dnaDto.Dna, lengthX);
+            ValidateNitrogenousBase(dnaDto.Dna);
             
-            bool isMutant = HasSequenceMinimum(mutantDto.Dna, lengthY);
+            bool isMutant = HasSequenceMinimum(dnaDto.Dna, lengthY);
             if (isMutant)
             {
-                isMutant = ValidateDnaSequence(mutantDto.Dna, lengthX, lengthY);
+                isMutant = ValidateDnaSequence(dnaDto.Dna, lengthX, lengthY);
             }
 
-            await InsertDnaSequence(mutantDto.Dna, isMutant);
+            await InsertDnaSequence(dnaDto.Dna, isMutant);
 
 
             return isMutant;
@@ -80,7 +79,6 @@ namespace BusinessLayer.BusinessLogic
             {
                 MatchCollection matchDna = regex.Matches(chain.ToUpper());
                 if (matchDna.Count <= 0)
-                    //TODO: Insert db. false
                     throw new InvalidOperationException($"{nameof(DnaSequenceLogic)}: The nitrogenous base of DNA has invalid data.");
             }
         }

@@ -10,7 +10,6 @@
 // </copyright>
 // <summary></summary>
 
-using BusinessLayer.Dtos;
 using DataAccess.Dtos;
 using System.Threading.Tasks;
 

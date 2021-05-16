@@ -11,7 +11,6 @@
 // <summary></summary>
 
 using AutoMapper;
-using BusinessLayer.Dtos;
 using BusinessLayer.Interfaces;
 using DataAccess.Dtos;
 using Microsoft.AspNetCore.Mvc;

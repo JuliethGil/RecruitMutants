@@ -17,5 +17,10 @@ namespace DataAccess.Dtos
         public int Count_mutant_dna { get; set; }
         public int Count_human_dna { get; set; }
         public decimal Ratio { get; set; }
+
+        public StatsDto()
+        {
+            Ratio = 0;
+        }
     }
 }

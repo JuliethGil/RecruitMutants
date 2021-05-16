@@ -47,8 +47,8 @@ namespace RecruitMutants.Controllers
         [DisableRequestSizeLimit]
         [ProducesResponseType((int)HttpStatusCode.OK)]
         [ProducesResponseType((int)HttpStatusCode.Forbidden)]
-        [Produces(MediaTypeNames.Application.Json, Type = typeof(MutantModel))]
-        public async Task<IActionResult> Post([FromBody] MutantModel request)
+        [Produces(MediaTypeNames.Application.Json, Type = typeof(DnaSequenceModel))]
+        public async Task<IActionResult> Post([FromBody] DnaSequenceModel request)
         {
             try
             {

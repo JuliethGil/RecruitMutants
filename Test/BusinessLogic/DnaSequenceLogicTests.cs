@@ -17,14 +17,15 @@ using Moq;
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using Test.Stubs;
 using Xunit;
 
 namespace Test.Controllers
 {
     public class DnaSequenceLogicTests
     {
-        private MockRepository _mockRepository;
-        private Mock<IDnaSequenceQuery> _mockDnaSequenceQuery;
+        private readonly MockRepository _mockRepository;
+        private readonly Mock<IDnaSequenceQuery> _mockDnaSequenceQuery;
 
         public DnaSequenceLogicTests()
         {
@@ -38,7 +39,7 @@ namespace Test.Controllers
         }
 
         [Fact]
-        public async Task ValidateListEmpy_InvalidOperationException()
+        public async Task IsMutant_ValidateListEmpy_InvalidOperationException()
         {
             var dnaSequenceLogic = CreateDnaSequenceLogic();
 
@@ -56,12 +57,10 @@ namespace Test.Controllers
                 var expected = $"{ nameof(DnaSequenceLogic)}: No DNA.";
                 Assert.Contains(expected, ex.Message);
             }
-
-            _mockRepository.VerifyAll();
         }
 
         [Fact]
-        public async Task FormatWrong_InvalidOperationException()
+        public async Task IsMutant_FormatWrong_InvalidOperationException()
         {
             var dnaSequenceLogic = CreateDnaSequenceLogic();
 
@@ -83,12 +82,10 @@ namespace Test.Controllers
                 var expected = $"{ nameof(DnaSequenceLogic)}: The DNA format is wrong.";
                 Assert.Contains(expected, ex.Message);
             }
-            _mockRepository.VerifyAll();
-
         }
 
         [Fact]
-        public async Task ValidateNitrogenousBaseWithATCG_InvalidOperationException()
+        public async Task IsMutant_ValidateNitrogenousBaseWithATCG_InvalidOperationException()
         {
             var dnaSequenceLogic = CreateDnaSequenceLogic();
 
@@ -110,11 +107,10 @@ namespace Test.Controllers
                 var expected = $"{ nameof(DnaSequenceLogic)}: The nitrogenous base of DNA has invalid data.";
                 Assert.Contains(expected, ex.Message);
             }
-            _mockRepository.VerifyAll();
         }
 
         [Fact]
-        public async Task ValidateMinimumSequence_InvalidOperationException()
+        public async Task IsMutant_ValidateMinimumSequence_InvalidOperationException()
         {
             _mockDnaSequenceQuery.Setup(x => x.InsertDnaSequence(It.IsAny<DnaSequenceDto>())
                                        ).ReturnsAsync(1);
@@ -133,11 +129,11 @@ namespace Test.Controllers
             bool result = await dnaSequenceLogic.IsMutant(dnaDto);
 
             Assert.False(result);
-            _mockRepository.VerifyAll();
+            _mockDnaSequenceQuery.VerifyAll();
         }
 
         [Fact]
-        public async Task NonMutantDNA_InvalidOperationException()
+        public async Task IsMutant_NonMutantDNA_InvalidOperationException()
         {
             _mockDnaSequenceQuery.Setup(x => x.InsertDnaSequence(It.IsAny<DnaSequenceDto>())
                                        ).ReturnsAsync(1);
@@ -159,11 +155,11 @@ namespace Test.Controllers
             bool result = await dnaSequenceLogic.IsMutant(dnaDto);
 
             Assert.False(result);
-            _mockRepository.VerifyAll();
+            _mockDnaSequenceQuery.VerifyAll();
         }
 
         [Fact]
-        public async Task ValidateMutantHorizontally_True()
+        public async Task IsMutant_ValidateMutantHorizontally_True()
         {
             _mockDnaSequenceQuery.Setup(x => x.InsertDnaSequence(It.IsAny<DnaSequenceDto>())
                                        ).ReturnsAsync(1);
@@ -181,11 +177,11 @@ namespace Test.Controllers
             bool result = await dnaSequenceLogic.IsMutant(dnaDto);
 
             Assert.True(result);
-            _mockRepository.VerifyAll();
+            _mockDnaSequenceQuery.VerifyAll();
         }
 
         [Fact]
-        public async Task ValidateMutantDownVertical_True()
+        public async Task IsMutant_ValidateMutantDownVertical_True()
         {
             _mockDnaSequenceQuery.Setup(x => x.InsertDnaSequence(It.IsAny<DnaSequenceDto>())
                                        ).ReturnsAsync(1);
@@ -206,11 +202,11 @@ namespace Test.Controllers
             bool result = await dnaSequenceLogic.IsMutant(dnaDto);
 
             Assert.True(result);
-            _mockRepository.VerifyAll();
+            _mockDnaSequenceQuery.VerifyAll();
         }
 
         [Fact]
-        public async Task ValidateMutantUpVertical_True()
+        public async Task IsMutant_ValidateMutantUpVertical_True()
         {
             _mockDnaSequenceQuery.Setup(x => x.InsertDnaSequence(It.IsAny<DnaSequenceDto>())
                                        ).ReturnsAsync(1);
@@ -232,7 +228,38 @@ namespace Test.Controllers
             bool result = await dnaSequenceLogic.IsMutant(dnaDto);
 
             Assert.True(result);
-            _mockRepository.VerifyAll();
+            _mockDnaSequenceQuery.VerifyAll();
+        }
+
+        [Fact]
+        public async Task Stats_NoPersonButMutants_NoRatio()
+        {
+            _mockDnaSequenceQuery.Setup(x => x.PutDnaSequence()
+                                       ).ReturnsAsync(DnaSequenceStub.DnaSequencesDto);
+
+            var dnaSequenceLogic = CreateDnaSequenceLogic();
+
+            var result = await dnaSequenceLogic.Stats();
+
+            Equals(DnaSequenceStub.StatsDtoNoRatio, result);
+            Assert.Equal(0, result.Ratio);
+            _mockDnaSequenceQuery.VerifyAll();
+        }
+
+
+        [Fact]
+        public async Task Stats_NoPersonButMutants_Ratio()
+        {
+            _mockDnaSequenceQuery.Setup(x => x.PutDnaSequence()
+                                       ).ReturnsAsync(DnaSequenceStub.DnaSequencesDto2);
+
+            var dnaSequenceLogic = CreateDnaSequenceLogic();
+
+            var result = await dnaSequenceLogic.Stats();
+
+            Equals(DnaSequenceStub.StatsDto, result);
+            Assert.Equal(DnaSequenceStub.StatsDto.Ratio, result.Ratio);
+            _mockDnaSequenceQuery.VerifyAll();
         }
     }
 }

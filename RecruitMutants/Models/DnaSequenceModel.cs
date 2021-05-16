@@ -14,7 +14,7 @@ using System.Collections.Generic;
 
 namespace RecruitMutants.Models
 {
-    public class MutantModel
+    public class DnaSequenceModel
     {
         public List<string> Dna { get; set; }
     }

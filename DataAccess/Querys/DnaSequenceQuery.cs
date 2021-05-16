@@ -41,9 +41,7 @@ namespace DataAccess.Services
             var result =   await CoreContext.DnaSequences.Select(
                 s => new DnaSequence
                 {
-                    Id = s.Id,
-                    IsMutant = s.IsMutant,
-                    PersonDna = s.PersonDna
+                    IsMutant = s.IsMutant
                 }).ToListAsync();
 
             return Mapper.Map<List<DnaSequenceDto>>(result);

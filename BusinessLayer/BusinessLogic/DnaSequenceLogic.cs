@@ -35,7 +35,7 @@ namespace BusinessLayer.BusinessLogic
             int lengthX = dnaDto.Dna[0].Length;
             IsCorrectFormatDna(dnaDto.Dna, lengthX);
             ValidateNitrogenousBase(dnaDto.Dna);
-            
+
             bool isMutant = HasSequenceMinimum(dnaDto.Dna, lengthY);
             if (isMutant)
             {
@@ -195,14 +195,15 @@ namespace BusinessLayer.BusinessLogic
         public async Task<StatsDto> Stats()
         {
             List<DnaSequenceDto> dnaSequences = await _dnaSequenceQuery.PutDnaSequence();
-            
+
             StatsDto stats = new StatsDto()
             {
                 Count_mutant_dna = dnaSequences.Count(d => d.IsMutant),
                 Count_human_dna = dnaSequences.Count(d => !d.IsMutant),
             };
 
-            stats.Ratio = Math.Round((decimal)stats.Count_mutant_dna / (decimal)stats.Count_human_dna, 1);
+            if (stats.Count_mutant_dna != 0 && stats.Count_human_dna != 0)
+                stats.Ratio = Math.Round((decimal)stats.Count_mutant_dna / stats.Count_human_dna, 1);
 
             return stats;
         }

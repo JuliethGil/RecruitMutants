@@ -26,8 +26,4 @@
     <ProjectReference Include="..\RecruitMutants\RecruitMutants.csproj" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="Controllers\" />
-  </ItemGroup>
-
 </Project>

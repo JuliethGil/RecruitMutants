@@ -28,22 +28,22 @@ namespace BusinessLayer.BusinessLogic
 
         public DnaSequenceLogic(IDnaSequenceQuery dnaSequenceQuery) => _dnaSequenceQuery = dnaSequenceQuery;
 
-        public async Task<bool> IsMutant(DnaDto dnaDto)
+        public async Task<bool> IsMutant(List<string> dna)
         {
-            int lengthY = dnaDto.Dna.Count;
+            int lengthY = dna.Count;
             DnaContainsData(lengthY);
-            int lengthX = dnaDto.Dna[0].Length;
-            dnaDto.Dna = dnaDto.Dna.ConvertAll(d => d.ToUpper());
-            IsCorrectFormatDna(dnaDto.Dna, lengthX);
-            ValidateNitrogenousBase(dnaDto.Dna);
+            int lengthX = dna[0].Length;
+            dna = dna.ConvertAll(d => d.ToUpper());
+            IsCorrectFormatDna(dna, lengthX);
+            ValidateNitrogenousBase(dna);
 
-            bool isMutant = HasSequenceMinimum(dnaDto.Dna, lengthY);
+            bool isMutant = HasSequenceMinimum(dna, lengthY);
             if (isMutant)
             {
-                isMutant = ValidateDnaSequence(dnaDto.Dna, lengthX, lengthY);
+                isMutant = ValidateDnaSequence(dna, lengthX, lengthY);
             }
 
-            await InsertDnaSequence(dnaDto.Dna, isMutant);
+            await InsertDnaSequence(dna, isMutant);
 
             return isMutant;
         }

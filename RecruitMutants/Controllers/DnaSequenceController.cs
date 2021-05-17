@@ -53,7 +53,7 @@ namespace RecruitMutants.Controllers
         {
             try
             {
-                var objRequest = Mapper.Map<DnaDto>(request);
+                var objRequest = Mapper.Map<List<string>>(request.Dna);
                 bool isMutant = await _service.IsMutant(objRequest);
 
                 if (isMutant)

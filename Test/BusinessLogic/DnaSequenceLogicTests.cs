@@ -42,15 +42,11 @@ namespace Test.BusinessLogic
         public async Task IsMutant_ValidateListEmpy_InvalidOperationException()
         {
             var dnaSequenceLogic = CreateDnaSequenceLogic();
-
-            DnaDto dnaDto = new DnaDto()
-            {
-                Dna = new List<string>()
-            };
+            List<string> dna = new List<string>();
 
             try
             {
-                await dnaSequenceLogic.IsMutant(dnaDto);
+                await dnaSequenceLogic.IsMutant(dna);
             }
             catch (Exception ex)
             {
@@ -64,18 +60,15 @@ namespace Test.BusinessLogic
         {
             var dnaSequenceLogic = CreateDnaSequenceLogic();
 
-            DnaDto dnaDto = new DnaDto()
+            List<string> dna = new List<string>()
             {
-                Dna = new List<string>()
-                {
-                    "ATGGGG",
-                    "ATAAA",
-                }
+                "ATGGGG",
+                "ATAAA",
             };
 
             try
             {
-                await dnaSequenceLogic.IsMutant(dnaDto);
+                await dnaSequenceLogic.IsMutant(dna);
             }
             catch (Exception ex)
             {
@@ -89,18 +82,15 @@ namespace Test.BusinessLogic
         {
             var dnaSequenceLogic = CreateDnaSequenceLogic();
 
-            DnaDto dnaDto = new DnaDto()
+            List<string> dna = new List<string>()
             {
-                Dna = new List<string>()
-                {
-                    "ATGTHC",
-                    "ATAAAA",
-                }
+                "ATGTHC",
+                "ATAAAA",
             };
 
             try
             {
-                await dnaSequenceLogic.IsMutant(dnaDto);
+                await dnaSequenceLogic.IsMutant(dna);
             }
             catch (Exception ex)
             {
@@ -117,16 +107,14 @@ namespace Test.BusinessLogic
 
             var dnaSequenceLogic = CreateDnaSequenceLogic();
 
-            DnaDto dnaDto = new DnaDto()
+            List<string> dna = new List<string>()
             {
-                Dna = new List<string>()
-                {
-                    "ATG",
-                    "ATA",
-                }
+                "ATG",
+                "ATA",
             };
 
-            bool result = await dnaSequenceLogic.IsMutant(dnaDto);
+
+            bool result = await dnaSequenceLogic.IsMutant(dna);
 
             Assert.False(result);
             _mockDnaSequenceQuery.VerifyAll();
@@ -139,20 +127,17 @@ namespace Test.BusinessLogic
                                        ).ReturnsAsync(1);
             var dnaSequenceLogic = CreateDnaSequenceLogic();
 
-            DnaDto dnaDto = new DnaDto()
+            List<string> dna = new List<string>()
             {
-                Dna = new List<string>()
-                {
-                    "ATGTGA",
-                    "AAGCGC",
-                    "TTATGA",
-                    "AGATGC",
-                    "CCGCTC",
-                    "TCACTG"
-                }
+                "ATGTGA",
+                "AAGCGC",
+                "TTATGA",
+                "AGATGC",
+                "CCGCTC",
+                "TCACTG"
             };
 
-            bool result = await dnaSequenceLogic.IsMutant(dnaDto);
+            bool result = await dnaSequenceLogic.IsMutant(dna);
 
             Assert.False(result);
             _mockDnaSequenceQuery.VerifyAll();
@@ -165,16 +150,13 @@ namespace Test.BusinessLogic
                                        ).ReturnsAsync(1);
             var dnaSequenceLogic = CreateDnaSequenceLogic();
 
-            DnaDto dnaDto = new DnaDto()
+            List<string> dna = new List<string>()
             {
-                Dna = new List<string>()
-                {
-                    "ATGGGG",
-                    "ATAAAA",
-                }
+                "ATGGGG",
+                "ATAAAA"
             };
 
-            bool result = await dnaSequenceLogic.IsMutant(dnaDto);
+            bool result = await dnaSequenceLogic.IsMutant(dna);
 
             Assert.True(result);
             _mockDnaSequenceQuery.VerifyAll();
@@ -187,19 +169,16 @@ namespace Test.BusinessLogic
                                        ).ReturnsAsync(1);
             var dnaSequenceLogic = CreateDnaSequenceLogic();
 
-            DnaDto dnaDto = new DnaDto()
+            List<string> dna = new List<string>()
             {
-                Dna = new List<string>()
-                {
-                    "ATGAGA",
-                    "CCGTGC",
-                    "TCGTGT",
-                    "ACACGG",
-                    "TCACTG"
-                }
+                "ATGAGA",
+                "CCGTGC",
+                "TCGTGT",
+                "ACACGG",
+                "TCACTG"
             };
 
-            bool result = await dnaSequenceLogic.IsMutant(dnaDto);
+            bool result = await dnaSequenceLogic.IsMutant(dna);
 
             Assert.True(result);
             _mockDnaSequenceQuery.VerifyAll();
@@ -212,20 +191,17 @@ namespace Test.BusinessLogic
                                        ).ReturnsAsync(1);
             var dnaSequenceLogic = CreateDnaSequenceLogic();
 
-            DnaDto dnaDto = new DnaDto()
+            List<string> dna = new List<string>()
             {
-                Dna = new List<string>()
-                {
-                    "ATGGGA",
-                    "AAGTGC",
-                    "GGTTCT",
-                    "GCACGC",
-                    "ACCCTC",
-                    "TCACTG"
-                }
+                "ATGGGA",
+                "AAGTGC",
+                "GGTTCT",
+                "GCACGC",
+                "ACCCTC",
+                "TCACTG"
             };
 
-            bool result = await dnaSequenceLogic.IsMutant(dnaDto);
+            bool result = await dnaSequenceLogic.IsMutant(dna);
 
             Assert.True(result);
             _mockDnaSequenceQuery.VerifyAll();

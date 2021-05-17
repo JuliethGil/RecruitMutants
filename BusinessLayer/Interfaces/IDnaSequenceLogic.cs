@@ -11,6 +11,7 @@
 // <summary></summary>
 
 using DataAccess.Dtos;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 
 namespace BusinessLayer.Interfaces
@@ -22,7 +23,7 @@ namespace BusinessLayer.Interfaces
         /// </summary>
         /// <param name="dna">dna list</param>
         /// <returns>Is a mutant</returns>
-        Task<bool> IsMutant(DnaDto dna);
+        Task<bool> IsMutant(List<string> dna);
 
 
         /// <summary> 

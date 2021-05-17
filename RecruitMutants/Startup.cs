@@ -56,7 +56,7 @@ namespace RecruitMutants
             }
             services.AddDbContext<CoreContext>(opt =>
                   opt.UseNpgsql(connectionString)
-            ).AddSingleton(Configuration.GetConnectionString(connectionString));
+            ).AddSingleton(connectionString);
 
 
             #endregion Context SQL Postgres

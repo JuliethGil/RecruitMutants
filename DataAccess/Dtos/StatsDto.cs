@@ -5,13 +5,17 @@
 // Created          : 15-05-2021
 //
 // ***********************************************************************
-// <copyright file="Node.cs" company="">
+// <copyright file="StatsDto.cs" company="">
 //     Copyright (c) Julieth Gil. All rights reserved.
 // </copyright>
 // <summary></summary>
 
 namespace DataAccess.Dtos
 {
+    /// <summary>
+    /// Class StatsDto.
+    /// </summary>
+    /// <remarks>Julieth Gil</remarks>
     public class StatsDto
     {
         public int Count_mutant_dna { get; set; }

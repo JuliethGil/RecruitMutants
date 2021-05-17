@@ -1,12 +1,28 @@
-﻿using System;
+﻿
+// ***********************************************************************
+// Assembly         : DataAccess
+// Author           : Julieth Gil
+// Created          : 13-05-2021
+//
+// ***********************************************************************
+// <copyright file="DnaSequenceQuery.cs" company="">
+//     Copyright (c) Julieth Gil. All rights reserved.
+// </copyright>
+// <summary>Contesxt DB</summary>
+
 using DataAccess.Entities;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Metadata;
+using System.Diagnostics.CodeAnalysis;
 
 #nullable disable
 
 namespace DataAccess
 {
+    /// <summary>
+    /// Class CoreContext.
+    /// </summary>
+    /// <remarks>Julieth Gil</remarks>
+    [ExcludeFromCodeCoverage]
     public partial class CoreContext : DbContext
     {
         public CoreContext()

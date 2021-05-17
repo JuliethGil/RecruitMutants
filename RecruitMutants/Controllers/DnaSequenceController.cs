@@ -59,7 +59,7 @@ namespace RecruitMutants.Controllers
                 if (isMutant)
                     return Ok();
             }
-            catch (Exception ex)
+            catch (Exception)
             {
                 return StatusCode((int)HttpStatusCode.Forbidden, null);
             }

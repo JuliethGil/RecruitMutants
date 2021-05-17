@@ -5,7 +5,7 @@
 // Created          : 13-05-2021
 //
 // ***********************************************************************
-// <copyright file="Node.cs" company="">
+// <copyright file="DnaSequenceQuery.cs" company="">
 //     Copyright (c) Julieth Gil. All rights reserved.
 // </copyright>
 // <summary></summary>
@@ -16,11 +16,17 @@ using DataAccess.Entities;
 using DataAccess.Interfaces;
 using Microsoft.EntityFrameworkCore;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Threading.Tasks;
 
 namespace DataAccess.Services
 {
+    /// <summary>
+    /// Class DnaSequenceDto.
+    /// </summary>
+    /// <remarks>Julieth Gil</remarks>
+    [ExcludeFromCodeCoverage]
     public class DnaSequenceQuery: IDnaSequenceQuery
     {
         private readonly CoreContext CoreContext;

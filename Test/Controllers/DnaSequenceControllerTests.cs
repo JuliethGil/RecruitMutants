@@ -38,6 +38,8 @@ namespace Test.Controllers
         [Fact]
         public async Task Post_ExpectedSetup_Ok()
         {
+
+            _mockDnaSequenceLogic.Setup(x => x.IsMutant(It.IsAny<List<string>>())).ReturnsAsync(true);
             var mutantController = CreateMutantController();
 
             List<string> chains = new List<string>() { "ATGCGA", "CAGTGC", "TTATGT", "AGAAGG", "CCCCTA", "TCACTG" };
@@ -49,6 +51,7 @@ namespace Test.Controllers
             IActionResult result = await mutantController.Post(request);
 
             Equals(StatusCodes.Status200OK, result);
+            _mockDnaSequenceLogic.VerifyAll();
         }
 
         [Fact]
@@ -71,7 +74,6 @@ namespace Test.Controllers
         public async Task GetAllAsync_ExpectedSetup_Forbidden()
         {
             _mockDnaSequenceLogic.Setup(x => x.Stats()).ReturnsAsync(DnaSequenceStub.StatsDto);
-
 
             var mutantController = CreateMutantController();
 

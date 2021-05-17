@@ -4,6 +4,10 @@ using System.Diagnostics.CodeAnalysis;
 
 namespace RecruitMutants
 {
+    /// <summary>
+    /// Class Program.
+    /// </summary>
+    /// <remarks>Julieth Gil/remarks>
     [ExcludeFromCodeCoverage]
     public class Program
     {

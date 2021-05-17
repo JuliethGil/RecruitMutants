@@ -47,7 +47,10 @@ namespace RecruitMutants
                 var uri = new Uri(envVar);
                 var username = uri.UserInfo.Split(':')[0];
                 var password = uri.UserInfo.Split(':')[1];
+                var host = envVar.Split("@")[1].Split(":")[0];
+
                 connectionString =
+                "; Host= " + host +
                 "; Database=" + uri.AbsolutePath.Substring(1) +
                 "; Username=" + username +
                 "; Password=" + password +

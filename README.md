@@ -1,6 +1,6 @@
 # Reclutamiento de mutantes - Mercadolibre
 
-Proyecto para descubrir basado en la cadena del adn cuales pertenecen a mutantes.
+Proyecto para descubrir basado en la cadena del adn, quienes son mutantes.
 
 
 ## Ejecucion Local
@@ -9,18 +9,18 @@ A continuacion se explicara lo necesario para poder ejecutar el proyecto de mane
 
 ### Pre-requisitos
 
-• Visual Studio 2019 https://visualstudio.microsoft.com/es/downloads/ 
-• Base de datos PostgreSql versión 13 https://www.postgresql.org/download/ 
-• Herramienta para consumir api se recomienda Postman https://www.postman.com/downloads/ 
-• Solicitar acceso al repositorio de Github
-• .Net Core 3.1 o superior
-• JMeter
-• Docker
+- Visual Studio 2019 https://visualstudio.microsoft.com/es/downloads/ 
+- Base de datos PostgreSql versión 13 https://www.postgresql.org/download/ 
+- Herramienta para consumir api se recomienda Postman https://www.postman.com/downloads/ 
+- Solicitar acceso al repositorio de Github
+- .Net Core 3.1 o superior
+- JMeter
+- Docker
 
 ### Instalación 
 
--Crear una base de datos y guardar el nombre y contraseña, se necesitara para mas adelante
--Crear la tabla **DnaSequences**
+- Crear una base de datos y guardar el nombre y contraseña, se necesitara para mas adelante
+- Crear la tabla **DnaSequences**
 - Abrir el proyecto con VS 2019 y buscar el archivo **appsettings.json** dentro del proyecto **RecruitMutants**
 - En la etiqueta **DefaultConnection** remplazar el nombre de la base de datos (database) y contraseña(password ) por los valores creados anteriormente.
 
@@ -45,6 +45,10 @@ ALTER TABLE public.DnaSequences
 ## Ejecutando las pruebas Unitarias
 
 En la consola de Package Manager ejecutar los siguientes comandos:
+
+```
+dotnet tool install -g dotnet-reportgenerator-globaltool
+```
 
 ```
 dotnet test /p:CollectCoverage=true /p:CoverletOutputFormat=cobertura /p:CoverletOutput='../Documentation/TestCoverage/'
@@ -87,14 +91,14 @@ Hacer el despliegue al servidor
 heroku container:release web -a recruitmutants
 ```
 
-##Ejecucion en la nube
+## Ejecucion en la nube
 
 https://recruitmutants.herokuapp.com/
 
-##Endpoints
+## Endpoints
 
 
-###Enviar cadena de adn
+### Enviar cadena de adn
 ```
 POST   /api/mutants
 ```
@@ -109,9 +113,9 @@ Ejemplo de parametro
 Retorna respuesta estándar HTTP 200 OK en caso de ser mutante de lo contrario 403 Forbidden
 
 
-###Obtener estadisticas
+### Obtener estadisticas
 ```
-POST   /api/stats
+GET   /api/stats
 ```
 
 Ejemplo de respuesta 

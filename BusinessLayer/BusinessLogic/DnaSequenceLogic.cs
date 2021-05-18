@@ -36,160 +36,35 @@ namespace BusinessLayer.BusinessLogic
             dna = dna.ConvertAll(d => d.ToUpper());
             IsCorrectFormatDna(dna, lengthX);
             ValidateNitrogenousBase(dna);
-
             bool isMutant = HasSequenceMinimum(dna, lengthY);
-            if (isMutant)
+
+            if (!isMutant)
             {
-                isMutant = ValidateDnaSequence(dna, lengthX, lengthY);
+                await InsertDnaSequence(dna, isMutant);
+                return isMutant;
             }
 
+            int numEqualDna = 0;
+
+            Parallel.For(0, lengthY, (y, statey) =>
+            {
+                if (numEqualDna > 1)
+                    statey.Stop();
+
+                Parallel.For(0, dna[y].Length, (x, statex) =>
+                {
+                    if (numEqualDna > 1)
+                        statex.Stop();
+
+                    if (EqualDown(dna, x, y) || EqualRight(dna, x, y) || EqualLeftDown(dna, x, y) || EqualRightDown(dna, x, y))
+                        numEqualDna++;
+                });
+            });
+
+            isMutant = numEqualDna > 1;
             await InsertDnaSequence(dna, isMutant);
 
             return isMutant;
-        }
-
-        private void DnaContainsData(int lengthY)
-        {
-            if (lengthY <= 0)
-                throw new InvalidOperationException($"{nameof(DnaSequenceLogic)}: No DNA.");
-        }
-
-        private void IsCorrectFormatDna(List<string> dna, int lengthX)
-        {
-            List<string> wrongChains = dna.Where(x => x.Length != lengthX).ToList();
-            if (wrongChains.Count > 0)
-                throw new InvalidOperationException($"{nameof(DnaSequenceLogic)}: The DNA format is wrong.");
-        }
-
-        private bool HasSequenceMinimum(List<string> dna, int lengthY)
-        {
-            List<string> ChainsThree = dna.Where(x => x.Length < ConstantsService.NumberEqualLetters).ToList();
-            if (ChainsThree.Count > 0 && lengthY < ConstantsService.NumberEqualLetters)
-                return false;
-
-            return true;
-        }
-
-        private void ValidateNitrogenousBase(List<string> dna)
-        {
-            string regexFormat = "^[ATCG]+$";
-            Regex regex = new Regex(regexFormat);
-
-            foreach (string chain in dna)
-            {
-                MatchCollection matchDna = regex.Matches(chain);
-                if (matchDna.Count <= 0)
-                    throw new InvalidOperationException($"{nameof(DnaSequenceLogic)}: The nitrogenous base of DNA has invalid data.");
-            }
-        }
-
-        private bool ValidateDnaSequence(List<string> dna, int lengthY, int lengthX)
-        {
-            List<NodeModel> nodesList = new List<NodeModel>();
-            NodeModel parent = new NodeModel(dna[0][0].ToString(), 0, 0);
-            MappingNode(ref parent, dna, 0, 0, ref nodesList);
-
-
-            int countChains = 0;
-            List<NodeModel> nodesClean = nodesList.Distinct(parent.distinctNodeComparer).ToList();
-            foreach (NodeModel node in nodesClean)
-            {
-                if (lengthX >= ConstantsService.NumberEqualLetters && node.Bottom != null && node.Bottom.Key == node.Key)
-                {
-                    if (node.Bottom.Bottom != null && node.Bottom.Bottom.Key == node.Key)
-                    {
-                        if (node.Bottom.Bottom.Bottom != null && node.Bottom.Bottom.Bottom.Key == node.Key)
-                            countChains++;
-                    }
-                }
-
-                if (lengthY >= ConstantsService.NumberEqualLetters && node.Right != null && node.Right.Key == node.Key)
-                {
-                    if (node.Right.Right != null && node.Right.Right.Key == node.Key)
-                    {
-                        if (node.Right.Right.Right != null && node.Right.Right.Right.Key == node.Key)
-                            countChains++;
-                    }
-                }
-
-                if (ValidateBottomRight(lengthY, lengthX, countChains, node))
-                {
-                    if (node.BottomRight.BottomRight != null && node.BottomRight.BottomRight.Key == node.Key)
-                    {
-                        if (node.BottomRight.BottomRight.BottomRight != null && node.BottomRight.BottomRight.BottomRight.Key == node.Key)
-                            countChains++;
-                    }
-                }
-
-                if (ValidateBottomLeft(lengthY, lengthX, countChains, node))
-                {
-                    if (node.BottomLeft.BottomLeft != null && node.BottomLeft.BottomLeft.Key == node.Key)
-                    {
-                        if (node.BottomLeft.BottomLeft.BottomLeft != null && node.BottomLeft.BottomLeft.BottomLeft.Key == node.Key)
-                            countChains++;
-                    }
-                }
-            }
-
-            return countChains >= ConstantsService.AmountMutantSequence;
-        }
-
-        private static bool ValidateBottomRight(int lengthY, int lengthX, int countChains, NodeModel node)
-        {
-            return countChains < ConstantsService.AmountMutantSequence
-                && lengthX >= ConstantsService.NumberEqualLetters
-                && lengthY >= ConstantsService.NumberEqualLetters
-                && node.BottomRight != null
-                && node.BottomRight.Key == node.Key;
-        }
-
-        private static bool ValidateBottomLeft(int lengthY, int lengthX, int countChains, NodeModel node)
-        {
-            return countChains < ConstantsService.AmountMutantSequence
-                && lengthX >= ConstantsService.NumberEqualLetters
-                && lengthY >= ConstantsService.NumberEqualLetters
-                && node.BottomLeft != null
-                && node.BottomLeft.Key == node.Key;
-        }
-
-        private void MappingNode(ref NodeModel parent, List<string> dna, int positionY, int positionX, ref List<NodeModel> nodes)
-        {
-            if (positionX < dna[positionY].Length - 1)
-            {
-                parent.Right = new NodeModel(dna[positionY][positionX + 1].ToString(), positionX + 1, positionY);
-                MappingNode(ref parent.Right, dna, positionY, positionX + 1, ref nodes);
-            }
-
-            if (positionY < dna.Count - 1)
-            {
-                parent.Bottom = new NodeModel(dna[positionY + 1][positionX].ToString(), positionX, positionY + 1);
-                MappingNode(ref parent.Bottom, dna, positionY + 1, positionX, ref nodes);
-            }
-
-            if (positionX < dna[positionY].Length - 1 && positionY < dna.Count - 1)
-            {
-                parent.BottomRight = new NodeModel(dna[positionY + 1][positionX + 1].ToString(), positionX + 1, positionY + 1);
-                MappingNode(ref parent.BottomRight, dna, positionY + 1, positionX + 1, ref nodes);
-            }
-
-            if (positionX > 0 && positionX < dna[positionY].Length && positionY < dna.Count - 1)
-            {
-                parent.BottomLeft = new NodeModel(dna[positionY + 1][positionX - 1].ToString(), positionX - 1, positionY + 1);
-                MappingNode(ref parent.BottomLeft, dna, positionY + 1, positionX - 1, ref nodes);
-            }
-
-            nodes.Add(parent);
-        }
-
-        private async Task<int> InsertDnaSequence(List<string> dna, bool isMutant)
-        {
-            DnaSequenceDto dnaSequenceDto = new DnaSequenceDto
-            {
-                PersonDna = string.Join(",", dna),
-                IsMutant = isMutant
-            };
-
-            return await _dnaSequenceQuery.InsertDnaSequence(dnaSequenceDto);
         }
 
         public async Task<StatsDto> Stats()
@@ -206,6 +81,158 @@ namespace BusinessLayer.BusinessLogic
                 stats.Ratio = Math.Round((decimal)stats.Count_mutant_dna / stats.Count_human_dna, 1);
 
             return stats;
+        }
+
+        /// <summary>
+        /// Valid that the string list contains as a sequence
+        /// </summary>
+        /// <param name="lengthY"></param>
+        private void DnaContainsData(int lengthY)
+        {
+            if (lengthY <= 0)
+                throw new InvalidOperationException($"{nameof(DnaSequenceLogic)}: No DNA.");
+        }
+
+        /// <summary>
+        /// Valid that each group of strings have the same length
+        /// </summary>
+        /// <param name="dna"></param>
+        /// <param name="lengthX"></param>
+        private void IsCorrectFormatDna(List<string> dna, int lengthX)
+        {
+            List<string> wrongChains = dna.Where(x => x.Length != lengthX).ToList();
+            if (wrongChains.Count > 0)
+                throw new InvalidOperationException($"{nameof(DnaSequenceLogic)}: The DNA format is wrong.");
+        }
+
+        /// <summary>
+        /// Valid que la cadena de cadenas contiene las letras permitidas
+        /// </summary>
+        /// <param name="dna"></param>
+        private void ValidateNitrogenousBase(List<string> dna)
+        {
+            string regexFormat = "^[" + ConstantsService.ValidLetters + "]+$";
+            Regex regex = new Regex(regexFormat);
+
+            foreach (string chain in dna)
+            {
+                MatchCollection matchDna = regex.Matches(chain);
+                if (matchDna.Count <= 0)
+                    throw new InvalidOperationException($"{nameof(DnaSequenceLogic)}: The nitrogenous base of DNA has invalid data.");
+            }
+        }
+
+        /// <summary>
+        /// Valid the minimum sequence to be considered a mutant
+        /// </summary>
+        /// <param name="dna"></param>
+        /// <param name="lengthY"></param>
+        /// <returns></returns>
+        private bool HasSequenceMinimum(List<string> dna, int lengthY)
+        {
+            List<string> ChainsThree = dna.Where(x => x.Length < ConstantsService.NumberEqualLetters).ToList();
+            if (ChainsThree.Count > 0 && lengthY < ConstantsService.NumberEqualLetters)
+                return false;
+
+            return true;
+        }
+
+        /// <summary>
+        /// Validate that there are ConstantsService.NumberEqualLetters positions of the same letter down
+        /// </summary>
+        /// <param name="dna">list dna</param>
+        /// <param name="x">position x of the list</param>
+        /// <param name="y">position y of the list</param>
+        /// <returns>Whether he found the letters or not</returns>
+        private bool EqualDown(List<string> dna, int x, int y)
+        {
+            if (y + 3 > dna.Count() - 1)
+                return false;
+
+            List<char> values = new List<char> { dna[y][x], dna[y + 1][x], dna[y + 2][x], dna[y + 3][x] };
+
+            if (values.Count(c => c == dna[y][x]) == ConstantsService.NumberEqualLetters)
+                return true;
+
+            return false;
+        }
+
+        /// <summary>
+        /// Validate that there are ConstantsService.NumberEqualLetters positions of the same letter right
+        /// </summary>
+        /// <param name="dna">list dna</param>
+        /// <param name="x">position x of the list</param>
+        /// <param name="y">position y of the list</param>
+        /// <returns>Whether he found the letters or not</returns>
+        private bool EqualRight(List<string> dna, int x, int y)
+        {
+            if (x + 3 > dna[y].Length - 1)
+                return false;
+
+            List<char> values = new List<char> { dna[y][x], dna[y][x + 1], dna[y][x + 2], dna[y][x + 3] };
+
+            if (values.Count(c => c == dna[y][x]) == ConstantsService.NumberEqualLetters)
+                return true;
+
+            return false;
+        }
+
+        /// <summary>
+        /// Validate that there are ConstantsService.NumberEqualLetters positions of the same letter left down
+        /// </summary>
+        /// <param name="dna">list dna</param>
+        /// <param name="x">position x of the list</param>
+        /// <param name="y">position y of the list</param>
+        /// <returns>Whether he found the letters or not</returns>
+        private bool EqualLeftDown(List<string> dna, int x, int y)
+        {
+            if (y + 3 > dna.Count() - 1 ||  x - 3 < 0)
+                return false;
+
+            List<char> values = new List<char> { dna[y][x], dna[y + 1][x - 1], dna[y + 2][x - 2], dna[y + 3][x - 3] };
+
+            if (values.Count(c => c == dna[y][x]) == ConstantsService.NumberEqualLetters)
+                return true;
+
+
+            return false;
+        }
+
+        /// <summary>
+        /// Validate that there are ConstantsService.NumberEqualLetters positions of the same letter righ down
+        /// </summary>
+        /// <param name="dna">list dna</param>
+        /// <param name="x">position x of the list</param>
+        /// <param name="y">position y of the list</param>
+        /// <returns>Whether he found the letters or not</returns>
+        private bool EqualRightDown(List<string> dna, int x, int y)
+        {
+            if (y + 3 > dna.Count() - 1 || x + 3 > dna[y].Length - 1)
+                return false;
+
+            List<char> values = new List<char> { dna[y][x], dna[y + 1][x + 1], dna[y + 2][x + 2], dna[y + 3][x + 3] };
+
+            if (values.Count(c => c == dna[y][x]) == ConstantsService.NumberEqualLetters)
+                return true;
+
+            return false;
+        }
+
+        /// <summary>
+        /// Insert the list of strings into the database
+        /// </summary>
+        /// <param name="dna">list dna<</param>
+        /// <param name="isMutant">Whether it is mutant or not</param>
+        /// <returns>Id</returns>
+        private async Task<int> InsertDnaSequence(List<string> dna, bool isMutant)
+        {
+            DnaSequenceDto dnaSequenceDto = new DnaSequenceDto
+            {
+                PersonDna = string.Join(",", dna),
+                IsMutant = isMutant
+            };
+
+            return await _dnaSequenceQuery.InsertDnaSequence(dnaSequenceDto);
         }
     }
 }

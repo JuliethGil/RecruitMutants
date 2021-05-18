@@ -10,6 +10,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using System;
 using System.Diagnostics.CodeAnalysis;
 
 namespace RecruitMutants
@@ -33,21 +34,39 @@ namespace RecruitMutants
         public void ConfigureServices(IServiceCollection services)
         {
             #region Context Postgres
-            
-            services.AddEntityFrameworkNpgsql()
-                .AddDbContext<CoreContext>(options =>
-                {
-                    options.UseNpgsql(Configuration.GetConnectionString("DefaultConnection"));
-                    
-                }).AddSingleton(Configuration.GetConnectionString("DefaultConnection"));
-            //services.AddSingleton<IDnaSequenceQuery,DnaSequenceQuery>();
-            services.AddScoped<IDnaSequenceQuery, DnaSequenceQuery>();
+            //other service configuration goes here...
+            //pull in connection string
+            string connectionString = null;
+            string envVar = Environment.GetEnvironmentVariable("DATABASE_URL");
+            if (string.IsNullOrEmpty(envVar))
+            {
+                connectionString = Configuration.GetConnectionString("DefaultConnection");
+            }
+            else
+            {
+                var uri = new Uri(envVar);
+                var username = uri.UserInfo.Split(':')[0];
+                var password = uri.UserInfo.Split(':')[1];
+                var host = envVar.Split("@")[1].Split(":")[0];
+
+                connectionString =
+                "; Host= " + host +
+                "; Database=" + uri.AbsolutePath.Substring(1) +
+                "; Username=" + username +
+                "; Password=" + password +
+                "; Port=" + uri.Port +
+                "; SSL Mode=Require; Trust Server Certificate=true;";
+            }
+            services.AddDbContext<CoreContext>(opt =>
+                  opt.UseNpgsql(connectionString)
+            ).AddSingleton(connectionString);
 
 
             #endregion Context SQL Postgres
 
             #region Register (dependency injection)
 
+            services.AddScoped<IDnaSequenceQuery, DnaSequenceQuery>();
             services.AddScoped<IDnaSequenceLogic, DnaSequenceLogic>();
             services.AddControllers();
             

@@ -22,12 +22,12 @@ namespace BusinessLayer.Interfaces
         /// Validate if is a mutant's chain 
         /// </summary>
         /// <param name="dna">dna list</param>
-        /// <returns>Is a mutant</returns>
+        /// <returns>Whether it is mutant or not, or generates a throw in case of error</returns>
         Task<bool> IsMutant(List<string> dna);
 
 
         /// <summary> 
-        /// Get information from people and mutants
+        /// Get stats from humans, mutants and ratio=mutants/humans 
         /// </summary>
         /// <param name="dna">dna list</param>
         /// <returns>Stats of people and mutants</returns>

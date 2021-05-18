@@ -20,5 +20,6 @@ namespace BusinessLayer.Constants
     {
         public const int NumberEqualLetters = 4;
         public const int AmountMutantSequence = 2;
+        public const string ValidLetters = "ATCG";
     }
 }

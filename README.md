@@ -1,4 +1,4 @@
-# Reclutamiento de mutantes - Mercadolibre
+# Reclutamiento de mutantes
 
 Proyecto para descubrir basado en la cadena del adn, quienes son mutantes.
 
